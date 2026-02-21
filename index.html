@@ -18,14 +18,13 @@
             z-index: -2;
         }
 
-        /* Стиль для цифр */
         .bg-number {
             position: absolute;
-            color: rgba(255, 255, 255, 0.2); /* Сделал чуть ярче, чтобы точно видеть */
+            color: rgba(255, 255, 255, 0.2); 
             font-size: 1.5vw;
             font-weight: 900;
             user-select: none;
-            z-index: -1; /* Чтобы были за текстом, но перед черным фоном */
+            z-index: -1; 
             pointer-events: none;
         }
 
@@ -112,22 +111,21 @@
     </div>
 
     <script>
-        // Функция создания цифр
         function createNumbers() {
             const nums = ['1', '9', '3'];
             for (let i = 0; i < 50; i++) {
                 let span = document.createElement('span');
                 span.className = 'bg-number';
                 span.innerText = nums[Math.floor(Math.random() * nums.length)];
-                span.style.left = Math.random() * 95 + 'vw'; // Чуть меньше 100, чтобы не было полос прокрутки
+                span.style.left = Math.random() * 95 + 'vw';
                 span.style.top = Math.random() * 95 + 'vh';
-                span.style.transform = `rotate(${Math.random() * 360}deg)`; // Полный хаос в поворотах
+                span.style.transform = `rotate(${Math.random() * 360}deg)`;
                 document.body.appendChild(span);
             }
         }
 
         window.onload = () => {
-            createNumbers(); // Запускаем цифры
+            createNumbers();
 
             let tl = gsap.timeline();
             tl.to(".hero-title", { opacity: 1, duration: 1.5, ease: "power4.out" })
@@ -138,21 +136,27 @@
             let rotationTween;
 
             flower.addEventListener('mouseenter', () => {
+                // Убиваем любую текущую анимацию, чтобы начать заново
                 gsap.killTweensOf(flower);
+                
+                // Запускаем бесконечное вращение
                 rotationTween = gsap.to(flower, {
                     rotation: "+=360",
-                    duration: 2.5,
+                    duration: 3,
                     repeat: -1,
                     ease: "none"
                 });
             });
 
             flower.addEventListener('mouseleave', () => {
+                // Останавливаем бесконечный цикл
                 if (rotationTween) rotationTween.kill();
+                
+                // Плавный возврат в исходное положение (0 градусов)
                 gsap.to(flower, {
-                    rotation: "+=120",
+                    rotation: 0, 
                     duration: 1.5,
-                    ease: "power2.out"
+                    ease: "back.out(1.7)" // Добавит микро-эффект пружины в конце
                 });
             });
         };
