@@ -8,7 +8,6 @@
     <style>
         body, html { margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden; font-family: 'Helvetica', sans-serif; background-color: #000; }
 
-        /* Фон с твоим новым обрезанным фото */
         .full-bg {
             position: fixed;
             top: 0; left: 0;
@@ -39,11 +38,11 @@
             text-transform: uppercase;
             margin: 0;
             opacity: 0;
+            cursor: default;
         }
 
-        /* Оптимальный размер логотипа logo1931.jpg */
         .flower-o {
-            width: 9.5vw;  /* Вернул нормальный размер */
+            width: 9.5vw;
             height: 9.5vw;
             margin: 0 0.2vw;
             background: url('logo1931.jpg');
@@ -55,6 +54,12 @@
             position: relative;
             top: -0.2vw; 
             border-radius: 50%;
+            cursor: pointer; /* Показываем, что на цветок можно нажать */
+            transition: transform 0.1s;
+        }
+
+        .flower-o:active {
+            transform: scale(0.9); /* Эффект нажатия (сжатие) */
         }
 
         .sub-text {
@@ -90,7 +95,7 @@
 
     <div class="content">
         <h1 class="hero-title">
-            STREET FL<div class="flower-o"></div>WERS
+            STREET FL<div class="flower-o" id="spin-flower"></div>WERS
         </h1>
         
         <p class="sub-text">Handmade Custom Collection 2026</p>
@@ -107,12 +112,16 @@
             tl.to(".hero-title", { opacity: 1, duration: 1.5, ease: "power4.out" })
               .to(".sub-text", { opacity: 1, duration: 1 }, "-=1")
               .to(".links", { opacity: 1, y: -10, duration: 0.8 }, "-=0.5");
+
+            // Скрипт для вращения по клику
+            const flower = document.getElementById('spin-flower');
             
-            gsap.to(".flower-o", {
-                rotation: 360,
-                duration: 10,
-                repeat: -1,
-                ease: "none"
+            flower.addEventListener('click', () => {
+                gsap.to(flower, {
+                    rotation: "+=360", // Поворот на 360 градусов от текущего положения
+                    duration: 1,
+                    ease: "power2.out"
+                });
             });
         };
     </script>
