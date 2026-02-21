@@ -6,115 +6,83 @@
     <title>STREET FLOWERS | OFFICIAL</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&display=swap');
+
         body, html { margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden; font-family: 'Helvetica', sans-serif; background-color: #000; }
 
         .full-bg {
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('logo1931.jpg');
-            background-size: cover;
-            background-position: center;
-            z-index: -2;
+            background: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), url('logo1931.jpg');
+            background-size: cover; background-position: center; z-index: -2;
         }
 
         .bg-number {
-            position: absolute;
-            color: rgba(255, 255, 255, 0.15); 
-            font-size: 1.5vw;
-            font-weight: 900;
-            user-select: none;
-            z-index: -1; 
-            pointer-events: none;
-        }
-
-        /* Контейнеры для цветов в углах */
-        .corner-zone {
-            position: fixed;
-            width: 100px;
-            height: 100px;
-            z-index: 100;
-            /* background: rgba(255,255,255,0.1); */ /* Раскомментируй, чтобы увидеть зоны */
-        }
-        .top-left { top: 0; left: 0; }
-        .top-right { top: 0; right: 0; }
-        .bottom-left { bottom: 0; left: 0; }
-        .bottom-right { bottom: 0; right: 0; }
-
-        .corner-flower {
-            position: absolute;
-            width: 80px;
-            height: 80px;
-            background: url('logo1931.jpg') no-repeat center;
-            background-size: contain;
-            border-radius: 50%;
-            transform: scale(0); /* Изначально скрыты */
-            pointer-events: none;
+            position: absolute; color: rgba(255, 255, 255, 0.1); 
+            font-size: 1.5vw; font-weight: 900; user-select: none; z-index: -1; pointer-events: none;
         }
 
         .content {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            color: #fff;
-            position: relative;
-            z-index: 10;
+            height: 100vh; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; text-align: center; color: #fff; z-index: 10;
         }
 
+        /* ЭФФЕКТ МШИСТОГО ШРИФТА */
         .hero-title {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 9vw;
-            font-weight: 900;
-            letter-spacing: -2px;
-            text-transform: uppercase;
-            margin: 0;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 9vw; font-weight: 900; letter-spacing: -1px;
+            text-transform: uppercase; margin: 0;
+            /* Накладываем текстуру мха через градиент и шум */
+            background: linear-gradient(to bottom, #a2d149, #4a6d2f);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 10px rgba(74, 109, 47, 0.5));
+            position: relative;
         }
+
+        /* КОРНИ (имитация через псевдоэлементы) */
+        .hero-title::before, .hero-title::after {
+            content: 'Y'; font-family: 'UnifrakturMaguntia', serif;
+            position: absolute; font-size: 4vw; color: #3d2b1f;
+            opacity: 0.6; pointer-events: none; z-index: -1;
+        }
+        .hero-title::before { content: 'v'; bottom: -2vw; left: 10%; transform: rotate(180deg); }
+        .hero-title::after { content: 'x'; top: -1vw; right: 15%; }
 
         .flower-o {
-            width: 9.5vw;
-            height: 9.5vw;
-            margin: 0 0.2vw;
-            background: url('logo1931.jpg');
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
-            display: inline-block;
-            vertical-align: middle; 
-            position: relative;
-            top: -0.2vw; 
-            border-radius: 50%;
-            cursor: crosshair;
+            width: 9.5vw; height: 9.5vw; margin: 0 0.5vw;
+            background: url('logo1931.jpg'); background-size: contain;
+            background-repeat: no-repeat; background-position: center;
+            display: inline-block; vertical-align: middle; 
+            border-radius: 50%; cursor: crosshair;
+            -webkit-text-fill-color: initial; /* Сброс прозрачности текста для лого */
+            filter: drop-shadow(0 0 15px rgba(255,255,255,0.2));
         }
 
         .sub-text {
-            color: rgba(255,255,255,0.6);
-            letter-spacing: 5px;
-            text-transform: uppercase;
-            font-size: 1.2vw;
-            margin-top: 20px;
+            color: rgba(162, 209, 73, 0.7); /* Цвет молодого мха */
+            letter-spacing: 5px; text-transform: uppercase;
+            font-size: 1.2vw; margin-top: 20px; font-weight: 300;
         }
 
         .links { margin-top: 40px; display: flex; gap: 20px; }
-
         .btn {
-            padding: 15px 35px;
-            border: 1px solid rgba(255,255,255,0.3);
-            color: #fff;
-            text-decoration: none;
-            font-size: 10px;
-            font-weight: bold;
-            text-transform: uppercase;
-            transition: 0.4s ease;
-            background: rgba(255,255,255,0.05);
-            backdrop-filter: blur(10px);
+            padding: 15px 35px; border: 1px solid rgba(162, 209, 73, 0.3);
+            color: #fff; text-decoration: none; font-size: 10px; font-weight: bold;
+            text-transform: uppercase; transition: 0.4s ease;
+            background: rgba(74, 109, 47, 0.1); backdrop-filter: blur(10px);
         }
+        .btn:hover { background: #a2d149; color: #000; transform: scale(1.1); box-shadow: 0 0 20px rgba(162, 209, 73, 0.4); }
 
-        .btn:hover { background: #fff; color: #000; transform: scale(1.1); }
+        .corner-zone { position: fixed; width: 100px; height: 100px; z-index: 100; }
+        .top-left { top: 0; left: 0; } .top-right { top: 0; right: 0; }
+        .bottom-left { bottom: 0; left: 0; } .bottom-right { bottom: 0; right: 0; }
+        .corner-flower {
+            position: absolute; width: 80px; height: 80px;
+            background: url('logo1931.jpg') no-repeat center; background-size: contain;
+            border-radius: 50%; transform: scale(0); pointer-events: none;
+        }
     </style>
 </head>
 <body>
@@ -130,7 +98,7 @@
         <h1 class="hero-title">
             STREET FL<div class="flower-o" id="spin-flower"></div>WERS
         </h1>
-        <p class="sub-text">Handmade Custom Collection 2026</p>
+        <p class="sub-text">Organic Custom Collection 2026</p>
         <div class="links">
             <a href="https://t.me/flowers193_bot" class="btn">Shop Now</a>
             <a href="#" class="btn">Giveaway</a>
@@ -153,19 +121,12 @@
 
         window.onload = () => {
             createNumbers();
-
             const flower = document.getElementById('spin-flower');
             let rotationTween;
 
-            // Вращение ЛОГО (ускорил до 1.5s)
             flower.addEventListener('mouseenter', () => {
                 gsap.killTweensOf(flower);
-                rotationTween = gsap.to(flower, {
-                    rotation: "+=360",
-                    duration: 1.5,
-                    repeat: -1,
-                    ease: "none"
-                });
+                rotationTween = gsap.to(flower, { rotation: "+=360", duration: 1.5, repeat: -1, ease: "none" });
             });
 
             flower.addEventListener('mouseleave', () => {
@@ -173,39 +134,17 @@
                 const currentRot = gsap.getProperty(flower, "rotation");
                 const modRot = currentRot % 360;
                 let targetRot = (modRot > 180 || modRot < -180) ? currentRot + (360 - Math.abs(modRot)) : currentRot - modRot;
-
-                gsap.to(flower, {
-                    rotation: targetRot, 
-                    duration: 1.8,
-                    ease: "elastic.out(1, 0.4)" 
-                });
+                gsap.to(flower, { rotation: targetRot, duration: 1.8, ease: "elastic.out(1, 0.4)" });
             });
 
-            // Логика для угловых цветов
             const zones = document.querySelectorAll('.corner-zone');
             zones.forEach(zone => {
                 const f = zone.querySelector('.corner-flower');
-                
-                zone.addEventListener('mouseenter', () => {
-                    gsap.to(f, {
-                        scale: 1.2,
-                        rotation: 360,
-                        duration: 0.8,
-                        ease: "back.out(2)"
-                    });
-                });
-
-                zone.addEventListener('mouseleave', () => {
-                    gsap.to(f, {
-                        scale: 0,
-                        rotation: 0,
-                        duration: 0.5,
-                        ease: "power2.in"
-                    });
-                });
+                zone.addEventListener('mouseenter', () => { gsap.to(f, { scale: 1.2, rotation: 360, duration: 0.8, ease: "back.out(2)" }); });
+                zone.addEventListener('mouseleave', () => { gsap.to(f, { scale: 0, rotation: 0, duration: 0.5, ease: "power2.in" }); });
             });
 
-            gsap.from(".content", { opacity: 0, y: 20, duration: 1.5, ease: "power4.out" });
+            gsap.from(".content", { opacity: 0, scale: 0.9, duration: 2, ease: "power4.out" });
         };
     </script>
 </body>
