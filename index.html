@@ -18,20 +18,15 @@
             z-index: -2;
         }
 
-        #numbers-bg {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            z-index: -1;
-            pointer-events: none;
-        }
-
+        /* Стиль для цифр */
         .bg-number {
             position: absolute;
-            color: rgba(255, 255, 255, 0.12);
-            font-size: 1.3vw;
+            color: rgba(255, 255, 255, 0.2); /* Сделал чуть ярче, чтобы точно видеть */
+            font-size: 1.5vw;
             font-weight: 900;
             user-select: none;
+            z-index: -1; /* Чтобы были за текстом, но перед черным фоном */
+            pointer-events: none;
         }
 
         .content {
@@ -42,6 +37,8 @@
             justify-content: center;
             text-align: center;
             color: #fff;
+            position: relative;
+            z-index: 10;
         }
 
         .hero-title {
@@ -102,7 +99,6 @@
 <body>
 
     <div class="full-bg"></div>
-    <div id="numbers-bg"></div>
 
     <div class="content">
         <h1 class="hero-title">
@@ -116,8 +112,23 @@
     </div>
 
     <script>
+        // Функция создания цифр
+        function createNumbers() {
+            const nums = ['1', '9', '3'];
+            for (let i = 0; i < 50; i++) {
+                let span = document.createElement('span');
+                span.className = 'bg-number';
+                span.innerText = nums[Math.floor(Math.random() * nums.length)];
+                span.style.left = Math.random() * 95 + 'vw'; // Чуть меньше 100, чтобы не было полос прокрутки
+                span.style.top = Math.random() * 95 + 'vh';
+                span.style.transform = `rotate(${Math.random() * 360}deg)`; // Полный хаос в поворотах
+                document.body.appendChild(span);
+            }
+        }
+
         window.onload = () => {
-            // Появление контента
+            createNumbers(); // Запускаем цифры
+
             let tl = gsap.timeline();
             tl.to(".hero-title", { opacity: 1, duration: 1.5, ease: "power4.out" })
               .to(".sub-text", { opacity: 1, duration: 1 }, "-=1")
@@ -126,46 +137,24 @@
             const flower = document.getElementById('spin-flower');
             let rotationTween;
 
-            // Наведение мыши
             flower.addEventListener('mouseenter', () => {
-                // Если старая анимация докрутки еще идет, убиваем её
                 gsap.killTweensOf(flower);
-                
-                // Запускаем бесконечное вращение
                 rotationTween = gsap.to(flower, {
                     rotation: "+=360",
-                    duration: 3,
+                    duration: 2.5,
                     repeat: -1,
                     ease: "none"
                 });
             });
 
-            // Уход мыши
             flower.addEventListener('mouseleave', () => {
-                if (rotationTween) {
-                    rotationTween.kill(); // Полностью удаляем бесконечную анимацию
-                }
-                
-                // Плавно докручиваем цветок, чтобы он не замирал резко
+                if (rotationTween) rotationTween.kill();
                 gsap.to(flower, {
-                    rotation: "+=90", // Добавляем еще четверть оборота для мягкости
-                    duration: 1.2,
+                    rotation: "+=120",
+                    duration: 1.5,
                     ease: "power2.out"
                 });
             });
-
-            // Цифры на фоне 1, 9, 3
-            const bg = document.getElementById('numbers-bg');
-            const nums = ['1', '9', '3'];
-            for (let i = 0; i < 45; i++) {
-                let span = document.createElement('span');
-                span.className = 'bg-number';
-                span.innerText = nums[Math.floor(Math.random() * nums.length)];
-                span.style.left = Math.random() * 100 + 'vw';
-                span.style.top = Math.random() * 100 + 'vh';
-                span.style.transform = `rotate(${Math.random() * 40 - 20}deg)`;
-                bg.appendChild(span);
-            }
         };
     </script>
 </body>
