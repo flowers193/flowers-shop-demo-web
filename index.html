@@ -8,14 +8,32 @@
     <style>
         body, html { margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden; font-family: 'Helvetica', sans-serif; background-color: #000; }
 
+        /* Фоновое изображение */
         .full-bg {
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('logo1931.jpg');
+            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('logo1931.jpg');
             background-size: cover;
             background-position: center;
+            z-index: -2;
+        }
+
+        /* Контейнер для цифр 193 */
+        #numbers-bg {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             z-index: -1;
+            pointer-events: none; /* Чтобы цифры не мешали кликать по лого */
+        }
+
+        .bg-number {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.15); /* Делаем их очень тусклыми */
+            font-size: 1.5vw; /* Маленький размер, как ты и хотел */
+            font-weight: 900;
+            user-select: none;
         }
 
         .content {
@@ -38,7 +56,6 @@
             text-transform: uppercase;
             margin: 0;
             opacity: 0;
-            cursor: default;
         }
 
         .flower-o {
@@ -54,13 +71,11 @@
             position: relative;
             top: -0.2vw; 
             border-radius: 50%;
-            cursor: pointer; /* Показываем, что на цветок можно нажать */
+            cursor: pointer;
             transition: transform 0.1s;
         }
 
-        .flower-o:active {
-            transform: scale(0.9); /* Эффект нажатия (сжатие) */
-        }
+        .flower-o:active { transform: scale(0.9); }
 
         .sub-text {
             color: rgba(255,255,255,0.6);
@@ -92,14 +107,11 @@
 <body>
 
     <div class="full-bg"></div>
-
-    <div class="content">
+    <div id="numbers-bg"></div> <div class="content">
         <h1 class="hero-title">
             STREET FL<div class="flower-o" id="spin-flower"></div>WERS
         </h1>
-        
         <p class="sub-text">Handmade Custom Collection 2026</p>
-        
         <div class="links">
             <a href="https://t.me/flowers193_bot" class="btn">Shop Now</a>
             <a href="#" class="btn">Giveaway</a>
@@ -108,21 +120,41 @@
 
     <script>
         window.onload = () => {
+            // 1. Анимация появления контента
             let tl = gsap.timeline();
             tl.to(".hero-title", { opacity: 1, duration: 1.5, ease: "power4.out" })
               .to(".sub-text", { opacity: 1, duration: 1 }, "-=1")
               .to(".links", { opacity: 1, y: -10, duration: 0.8 }, "-=0.5");
 
-            // Скрипт для вращения по клику
+            // 2. Вращение по клику
             const flower = document.getElementById('spin-flower');
-            
             flower.addEventListener('click', () => {
                 gsap.to(flower, {
-                    rotation: "+=360", // Поворот на 360 градусов от текущего положения
+                    rotation: "+=360",
                     duration: 1,
                     ease: "power2.out"
                 });
             });
+
+            // 3. Генерация цифр 1, 9, 3 на фоне
+            const bg = document.getElementById('numbers-bg');
+            const nums = ['1', '9', '3'];
+            const count = 40; // Количество цифр на экране
+
+            for (let i = 0; i < count; i++) {
+                let span = document.createElement('span');
+                span.className = 'bg-number';
+                span.innerText = nums[Math.floor(Math.random() * nums.length)];
+                
+                // Случайная позиция
+                span.style.left = Math.random() * 100 + 'vw';
+                span.style.top = Math.random() * 100 + 'vh';
+                
+                // Случайный наклон для хаотичности
+                span.style.transform = `rotate(${Math.random() * 40 - 20}deg)`;
+                
+                bg.appendChild(span);
+            }
         };
     </script>
 </body>
