@@ -49,7 +49,6 @@
             letter-spacing: -2px;
             text-transform: uppercase;
             margin: 0;
-            opacity: 0;
         }
 
         .flower-o {
@@ -74,10 +73,9 @@
             text-transform: uppercase;
             font-size: 1.2vw;
             margin-top: 20px;
-            opacity: 0;
         }
 
-        .links { margin-top: 40px; display: flex; gap: 20px; opacity: 0; }
+        .links { margin-top: 40px; display: flex; gap: 20px; }
 
         .btn {
             padding: 15px 35px;
@@ -127,17 +125,11 @@
         window.onload = () => {
             createNumbers();
 
-            let tl = gsap.timeline();
-            tl.to(".hero-title", { opacity: 1, duration: 1.5, ease: "power4.out" })
-              .to(".sub-text", { opacity: 1, duration: 1 }, "-=1")
-              .to(".links", { opacity: 1, y: -10, duration: 0.8 }, "-=0.5");
-
             const flower = document.getElementById('spin-flower');
             let rotationTween;
 
             flower.addEventListener('mouseenter', () => {
                 gsap.killTweensOf(flower);
-                // Запускаем бесконечное вращение
                 rotationTween = gsap.to(flower, {
                     rotation: "+=360",
                     duration: 3,
@@ -150,38 +142,30 @@
                 if (rotationTween) rotationTween.kill();
                 
                 const currentRot = gsap.getProperty(flower, "rotation");
-                // Находим следующую точку 0° (кратно 360), двигаясь только вперед
-                const finalPos = Math.ceil(currentRot / 360) * 360;
-
-                // Создаем эффект маятника (картина на гвоздю)
-                let pendulum = gsap.timeline();
+                const modRot = currentRot % 360;
                 
-                pendulum.to(flower, {
-                    rotation: finalPos, 
-                    duration: 1.2, 
-                    ease: "power2.out" // Сначала плавно долетаем до цели по инерции
-                })
-                .to(flower, {
-                    rotation: finalPos + 15, // Пролетаем чуть дальше вперед
-                    duration: 0.4,
-                    ease: "power1.inOut"
-                })
-                .to(flower, {
-                    rotation: finalPos - 10, // Качнулись назад
-                    duration: 0.5,
-                    ease: "power1.inOut"
-                })
-                .to(flower, {
-                    rotation: finalPos + 5, // Снова чуть вперед
-                    duration: 0.6,
-                    ease: "power1.inOut"
-                })
-                .to(flower, {
-                    rotation: finalPos, // Успокоились в центре
-                    duration: 0.8,
-                    ease: "back.out(2)"
+                let targetRot;
+                // ЛОГИКА ПЕРЕВЕСА:
+                // Если мы прошли больше половины круга (180 град), летим вперед к 360.
+                // Если меньше половины - падаем назад к 0.
+                if (modRot > 180 || modRot < -180) {
+                    targetRot = currentRot + (360 - Math.abs(modRot));
+                } else {
+                    targetRot = currentRot - modRot;
+                }
+
+                // ЭФФЕКТ НЕВАЛЯШКИ (единая анимация с инерцией)
+                gsap.to(flower, {
+                    rotation: targetRot, 
+                    duration: 2.5,
+                    // elastic создает то самое покачивание "картины на гвозде" 
+                    // когда она доходит до точки равновесия
+                    ease: "elastic.out(1, 0.3)" 
                 });
             });
+
+            // Плавное появление всего сайта
+            gsap.from(".content", { opacity: 0, y: 20, duration: 1.5, ease: "power4.out" });
         };
     </script>
 </body>
