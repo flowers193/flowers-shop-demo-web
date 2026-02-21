@@ -20,11 +20,35 @@
 
         .bg-number {
             position: absolute;
-            color: rgba(255, 255, 255, 0.2); 
+            color: rgba(255, 255, 255, 0.15); 
             font-size: 1.5vw;
             font-weight: 900;
             user-select: none;
             z-index: -1; 
+            pointer-events: none;
+        }
+
+        /* Контейнеры для цветов в углах */
+        .corner-zone {
+            position: fixed;
+            width: 100px;
+            height: 100px;
+            z-index: 100;
+            /* background: rgba(255,255,255,0.1); */ /* Раскомментируй, чтобы увидеть зоны */
+        }
+        .top-left { top: 0; left: 0; }
+        .top-right { top: 0; right: 0; }
+        .bottom-left { bottom: 0; left: 0; }
+        .bottom-right { bottom: 0; right: 0; }
+
+        .corner-flower {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: url('logo1931.jpg') no-repeat center;
+            background-size: contain;
+            border-radius: 50%;
+            transform: scale(0); /* Изначально скрыты */
             pointer-events: none;
         }
 
@@ -97,6 +121,11 @@
 
     <div class="full-bg"></div>
 
+    <div class="corner-zone top-left"><div class="corner-flower"></div></div>
+    <div class="corner-zone top-right"><div class="corner-flower"></div></div>
+    <div class="corner-zone bottom-left"><div class="corner-flower"></div></div>
+    <div class="corner-zone bottom-right"><div class="corner-flower"></div></div>
+
     <div class="content">
         <h1 class="hero-title">
             STREET FL<div class="flower-o" id="spin-flower"></div>WERS
@@ -128,11 +157,12 @@
             const flower = document.getElementById('spin-flower');
             let rotationTween;
 
+            // Вращение ЛОГО (ускорил до 1.5s)
             flower.addEventListener('mouseenter', () => {
                 gsap.killTweensOf(flower);
                 rotationTween = gsap.to(flower, {
                     rotation: "+=360",
-                    duration: 3,
+                    duration: 1.5,
                     repeat: -1,
                     ease: "none"
                 });
@@ -140,31 +170,41 @@
 
             flower.addEventListener('mouseleave', () => {
                 if (rotationTween) rotationTween.kill();
-                
                 const currentRot = gsap.getProperty(flower, "rotation");
                 const modRot = currentRot % 360;
-                
-                let targetRot;
-                // ЛОГИКА ПЕРЕВЕСА:
-                // Если мы прошли больше половины круга (180 град), летим вперед к 360.
-                // Если меньше половины - падаем назад к 0.
-                if (modRot > 180 || modRot < -180) {
-                    targetRot = currentRot + (360 - Math.abs(modRot));
-                } else {
-                    targetRot = currentRot - modRot;
-                }
+                let targetRot = (modRot > 180 || modRot < -180) ? currentRot + (360 - Math.abs(modRot)) : currentRot - modRot;
 
-                // ЭФФЕКТ НЕВАЛЯШКИ (единая анимация с инерцией)
                 gsap.to(flower, {
                     rotation: targetRot, 
-                    duration: 2.5,
-                    // elastic создает то самое покачивание "картины на гвозде" 
-                    // когда она доходит до точки равновесия
-                    ease: "elastic.out(1, 0.3)" 
+                    duration: 1.8,
+                    ease: "elastic.out(1, 0.4)" 
                 });
             });
 
-            // Плавное появление всего сайта
+            // Логика для угловых цветов
+            const zones = document.querySelectorAll('.corner-zone');
+            zones.forEach(zone => {
+                const f = zone.querySelector('.corner-flower');
+                
+                zone.addEventListener('mouseenter', () => {
+                    gsap.to(f, {
+                        scale: 1.2,
+                        rotation: 360,
+                        duration: 0.8,
+                        ease: "back.out(2)"
+                    });
+                });
+
+                zone.addEventListener('mouseleave', () => {
+                    gsap.to(f, {
+                        scale: 0,
+                        rotation: 0,
+                        duration: 0.5,
+                        ease: "power2.in"
+                    });
+                });
+            });
+
             gsap.from(".content", { opacity: 0, y: 20, duration: 1.5, ease: "power4.out" });
         };
     </script>
