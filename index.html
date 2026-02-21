@@ -5,22 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>STREET FLOWERS | OFFICIAL</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Eater&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&display=swap');
-
         body, html { margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden; font-family: 'Helvetica', sans-serif; background-color: #000; }
 
+        /* Фон */
         .full-bg {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), url('logo1931.jpg');
-            background-size: cover; background-position: center; z-index: -2;
+            background-size: cover; background-position: center; z-index: -5;
+        }
+
+        /* Оболочка для цифр */
+        #numbers-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; pointer-events: none;
         }
 
         .bg-number {
-            position: absolute; color: rgba(255, 255, 255, 0.1); 
-            font-size: 1.5vw; font-weight: 900; user-select: none; z-index: -1; pointer-events: none;
+            position: absolute; 
+            color: rgba(255, 255, 255, 0.25); /* Сделал ярче */
+            font-size: 1.8vw; font-weight: 900; 
+            user-select: none;
         }
 
         .content {
@@ -28,58 +34,34 @@
             align-items: center; justify-content: center; text-align: center; color: #fff; z-index: 10;
         }
 
-        /* ЭФФЕКТ МШИСТОГО ШРИФТА */
         .hero-title {
             display: flex; align-items: center; justify-content: center;
-            font-size: 9vw; font-weight: 900; letter-spacing: -1px;
-            text-transform: uppercase; margin: 0;
-            /* Накладываем текстуру мха через градиент и шум */
-            background: linear-gradient(to bottom, #a2d149, #4a6d2f);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 10px rgba(74, 109, 47, 0.5));
-            position: relative;
+            font-family: 'Eater', cursive; font-size: 8vw;
+            text-transform: uppercase; margin: 0; color: #fff;
+            text-shadow: 0 0 15px rgba(255,255,255,0.2);
         }
-
-        /* КОРНИ (имитация через псевдоэлементы) */
-        .hero-title::before, .hero-title::after {
-            content: 'Y'; font-family: 'UnifrakturMaguntia', serif;
-            position: absolute; font-size: 4vw; color: #3d2b1f;
-            opacity: 0.6; pointer-events: none; z-index: -1;
-        }
-        .hero-title::before { content: 'v'; bottom: -2vw; left: 10%; transform: rotate(180deg); }
-        .hero-title::after { content: 'x'; top: -1vw; right: 15%; }
 
         .flower-o {
-            width: 9.5vw; height: 9.5vw; margin: 0 0.5vw;
+            width: 9.5vw; height: 9.5vw; margin: 0 1vw;
             background: url('logo1931.jpg'); background-size: contain;
             background-repeat: no-repeat; background-position: center;
-            display: inline-block; vertical-align: middle; 
-            border-radius: 50%; cursor: crosshair;
-            -webkit-text-fill-color: initial; /* Сброс прозрачности текста для лого */
-            filter: drop-shadow(0 0 15px rgba(255,255,255,0.2));
+            display: inline-block; vertical-align: middle; border-radius: 50%; cursor: crosshair;
         }
 
-        .sub-text {
-            color: rgba(162, 209, 73, 0.7); /* Цвет молодого мха */
-            letter-spacing: 5px; text-transform: uppercase;
-            font-size: 1.2vw; margin-top: 20px; font-weight: 300;
-        }
-
-        .links { margin-top: 40px; display: flex; gap: 20px; }
+        .sub-text { color: rgba(255,255,255,0.5); letter-spacing: 8px; text-transform: uppercase; font-size: 1.1vw; margin-top: 25px; }
+        .links { margin-top: 50px; display: flex; gap: 20px; }
         .btn {
-            padding: 15px 35px; border: 1px solid rgba(162, 209, 73, 0.3);
+            padding: 12px 30px; border: 1px solid rgba(255,255,255,0.2);
             color: #fff; text-decoration: none; font-size: 10px; font-weight: bold;
-            text-transform: uppercase; transition: 0.4s ease;
-            background: rgba(74, 109, 47, 0.1); backdrop-filter: blur(10px);
+            text-transform: uppercase; transition: 0.4s ease; background: rgba(255,255,255,0.03); backdrop-filter: blur(5px);
         }
-        .btn:hover { background: #a2d149; color: #000; transform: scale(1.1); box-shadow: 0 0 20px rgba(162, 209, 73, 0.4); }
+        .btn:hover { background: #fff; color: #000; transform: scale(1.1); }
 
-        .corner-zone { position: fixed; width: 100px; height: 100px; z-index: 100; }
+        .corner-zone { position: fixed; width: 80px; height: 80px; z-index: 100; }
         .top-left { top: 0; left: 0; } .top-right { top: 0; right: 0; }
         .bottom-left { bottom: 0; left: 0; } .bottom-right { bottom: 0; right: 0; }
         .corner-flower {
-            position: absolute; width: 80px; height: 80px;
+            position: absolute; width: 60px; height: 60px;
             background: url('logo1931.jpg') no-repeat center; background-size: contain;
             border-radius: 50%; transform: scale(0); pointer-events: none;
         }
@@ -88,17 +70,16 @@
 <body>
 
     <div class="full-bg"></div>
-
-    <div class="corner-zone top-left"><div class="corner-flower"></div></div>
+    <div id="numbers-container"></div> <div class="corner-zone top-left"><div class="corner-flower"></div></div>
     <div class="corner-zone top-right"><div class="corner-flower"></div></div>
     <div class="corner-zone bottom-left"><div class="corner-flower"></div></div>
     <div class="corner-zone bottom-right"><div class="corner-flower"></div></div>
 
-    <div class="content">
+    <div class="content" id="main-content">
         <h1 class="hero-title">
             STREET FL<div class="flower-o" id="spin-flower"></div>WERS
         </h1>
-        <p class="sub-text">Organic Custom Collection 2026</p>
+        <p class="sub-text">Handmade Custom Collection 2026</p>
         <div class="links">
             <a href="https://t.me/flowers193_bot" class="btn">Shop Now</a>
             <a href="#" class="btn">Giveaway</a>
@@ -106,21 +87,24 @@
     </div>
 
     <script>
+        // Исправленная генерация цифр
         function createNumbers() {
+            const container = document.getElementById('numbers-container');
             const nums = ['1', '9', '3'];
-            for (let i = 0; i < 50; i++) {
+            for (let i = 0; i < 60; i++) {
                 let span = document.createElement('span');
                 span.className = 'bg-number';
                 span.innerText = nums[Math.floor(Math.random() * nums.length)];
-                span.style.left = Math.random() * 95 + 'vw';
-                span.style.top = Math.random() * 95 + 'vh';
+                span.style.left = Math.random() * 98 + 'vw';
+                span.style.top = Math.random() * 98 + 'vh';
                 span.style.transform = `rotate(${Math.random() * 360}deg)`;
-                document.body.appendChild(span);
+                container.appendChild(span);
             }
         }
 
         window.onload = () => {
-            createNumbers();
+            createNumbers(); // Цифры появятся сразу
+
             const flower = document.getElementById('spin-flower');
             let rotationTween;
 
@@ -133,19 +117,3 @@
                 if (rotationTween) rotationTween.kill();
                 const currentRot = gsap.getProperty(flower, "rotation");
                 const modRot = currentRot % 360;
-                let targetRot = (modRot > 180 || modRot < -180) ? currentRot + (360 - Math.abs(modRot)) : currentRot - modRot;
-                gsap.to(flower, { rotation: targetRot, duration: 1.8, ease: "elastic.out(1, 0.4)" });
-            });
-
-            const zones = document.querySelectorAll('.corner-zone');
-            zones.forEach(zone => {
-                const f = zone.querySelector('.corner-flower');
-                zone.addEventListener('mouseenter', () => { gsap.to(f, { scale: 1.2, rotation: 360, duration: 0.8, ease: "back.out(2)" }); });
-                zone.addEventListener('mouseleave', () => { gsap.to(f, { scale: 0, rotation: 0, duration: 0.5, ease: "power2.in" }); });
-            });
-
-            gsap.from(".content", { opacity: 0, scale: 0.9, duration: 2, ease: "power4.out" });
-        };
-    </script>
-</body>
-</html>
