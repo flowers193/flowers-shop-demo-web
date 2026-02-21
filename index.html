@@ -8,7 +8,7 @@
     <style>
         body, html { margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden; font-family: 'Helvetica', sans-serif; background-color: #000; }
 
-        /* Фон сайта с твоим новым logo193.jpg */
+        /* Фоновое изображение */
         .full-bg {
             position: fixed;
             top: 0; left: 0;
@@ -33,7 +33,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 9vw;
+            font-size: 9vw; /* Размер основных букв */
             font-weight: 900;
             letter-spacing: -2px;
             text-transform: uppercase;
@@ -41,16 +41,20 @@
             opacity: 0;
         }
 
-        /* Цветок вместо буквы О */
+        /* Настройка цветка-логотипа вместо буквы O */
         .flower-o {
-            width: 8.5vw; 
-            height: 8.5vw;
-            margin: 0 0.5vw;
+            width: 12vw;  /* Увеличили, чтобы он не казался мелким */
+            height: 12vw;
+            margin: 0 -0.5vw; /* Немного прижимаем буквы к логотипу */
             background: url('logo193.jpg');
-            background-size: cover;
+            background-size: contain;
+            background-repeat: no-repeat;
             background-position: center;
-            border-radius: 50%; /* Делаем картинку круглой, чтобы убрать углы квадрата */
             display: inline-block;
+            vertical-align: middle; 
+            position: relative;
+            top: -0.4vw; /* Приподнимаем, чтобы центрировать относительно букв */
+            border-radius: 50%; /* Скругляем углы квадрата */
         }
 
         .sub-text {
@@ -58,7 +62,7 @@
             letter-spacing: 5px;
             text-transform: uppercase;
             font-size: 1.2vw;
-            margin-top: 20px;
+            margin-top: 15px;
             opacity: 0;
         }
 
@@ -109,7 +113,7 @@
               .to(".sub-text", { opacity: 1, duration: 1 }, "-=1")
               .to(".links", { opacity: 1, y: -10, duration: 0.8 }, "-=0.5");
             
-            // Крутим нашу "О-цветок"
+            // Бесконечное вращение цветка
             gsap.to(".flower-o", {
                 rotation: 360,
                 duration: 10,
